@@ -1,0 +1,82 @@
+name: Build and Deploy Docker Image
+
+
+on:
+  workflow_run:
+    workflows:
+      - Secret Scan with TruffleHog
+    types:
+      - completed
+    status: success
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Print Hello Message
+        run: echo "Hello! This is a demo GitHub Actions workflow. 🚀"
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.23.2' # Replace with your Go version
+
+      - name: Get commit hash
+        id: get_commit
+        run: echo "COMMIT_HASH=$(git rev-parse HEAD)" >> $GITHUB_ENV
+
+      - name: Print commit hash for debugging
+        run: |
+          echo "Commit hash: ${{ env.COMMIT_HASH }}"
+
+
+      - name: Build Go application
+        run: |
+          go build -ldflags "s -w -X main.Version=${{ env.COMMIT_HASH }}" -o app cmd/api/*
+
+
+     
+
+      - name: Log in to GitHub Docker Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Scan Docker image with Docker Scout
+        id: scan_vulnerabilities
+        run: |
+            # Run Docker Scout scan for vulnerabilities
+            result=$(docker scout cves demo-cloud-v2:${{ github.sha }})
+            
+            # Output the result for visibility
+            echo "$result"
+            
+            # Check if vulnerabilities exist
+            if [[ "$result" == *"No vulnerabilities found"* ]]; then
+            echo "No vulnerabilities found in the image."
+            else
+            echo "Vulnerabilities found!"
+            exit 1  # Fail the workflow if vulnerabilities are found
+            fi
+
+      - name: Push Docker image
+        if: success()
+        run: |
+                # Tag the image with the GitHub SHA
+                docker tag demo-cloud_v2:${{ github.sha }} ghcr.io/ahakra/demo_cloud_v2:${{ github.sha }}
+                
+                # Push the image to the GitHub Container Registry
+                docker push ghcr.io/ahakra/demo_cloud_v2:${{ github.sha }}
+      - name: Push Docker image
+        run: |
+          docker tag demo-cloud-v2:${{ github.sha }} ghcr.io/ahakra/demo_cloud_v2:${{ github.sha }}
+          docker push ghcr.io/ahakra/demo_cloud_v2:${{ github.sha }}
+
