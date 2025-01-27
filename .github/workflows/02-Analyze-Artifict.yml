@@ -1,0 +1,37 @@
+name: Analyze Dependency-Check Report
+
+on:
+  workflow_run:
+    workflows: OWASP Security Check Pipeline
+    types:
+      - completed
+jobs:
+  analyze-report:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Download the artifact from the previous workflow run
+      - name: Download Dependency-Check Report
+        uses: actions/download-artifact@v3
+        with:
+          name: Dependency-Check Report
+          path: ./downloaded-reports
+
+      # Step 2: Print all vulnerabilities (from JSON report)
+      - name: Print all vulnerabilities from JSON report
+        run: |
+          echo "All vulnerabilities found:"
+          cat ./downloaded-reports/*.json  # This prints the entire JSON content
+          
+          # You can also use jq to list all vulnerabilities, regardless of severity
+          jq '.vulnerabilities[] | {name: .name, severity: .severity, description: .description}' ./downloaded-reports/*.json
+
+      # Step 3: Check for Critical Vulnerabilities (Optional)
+      - name: Check for Critical Vulnerabilities (JSON)
+        run: |
+          critical_issues=$(jq '.vulnerabilities[] | select(.severity == "Critical")' ./downloaded-reports/*.json)
+          if [ -n "$critical_issues" ]; then
+            echo "Critical vulnerabilities found!"
+            exit 1
+          else
+            echo "No critical vulnerabilities found."
+          fi
