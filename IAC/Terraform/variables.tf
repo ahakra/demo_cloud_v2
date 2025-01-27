@@ -6,18 +6,14 @@ variable "project" {
 variable "region" {
   description = "The region for the GKE cluster"
   type        = string
-  default     = "us-east4"
+  default     = "europe-north1"
 }
 
-variable "location" {
-  description = "The location of the GKE cluster"
-  type        = string
-  default     = "us-east4-a"
-}
+
 variable "node_pool_locations" {
   description = "List of zones where the node pool will be created"
   type        = list(string)
-  default     = ["us-east4-a", "us-east4-b"]
+  default     = ["europe-north1-a"]
 }
 
 variable "machine_type" {
@@ -38,11 +34,6 @@ variable "initial_node_count" {
   default     = 1
 }
 
-variable "node_pool_location" {
-  description = "The location for the node pool"
-  type        = string
-  default     = "us-east4-c"
-}
 
 variable "node_pool_count" {
   description = "The initial number of nodes in the node pool"

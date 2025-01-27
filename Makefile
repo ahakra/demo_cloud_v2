@@ -3,7 +3,7 @@ TF_DIR = IAC/Terraform
 GCP_AUTH_CMD = gcloud auth activate-service-account $(DEMO_CLOUD_V2_USER) --key-file=$(DEMO_CLOUD_V2_KEY)
 GCP_CONFIG_PROJECT_CMD = gcloud config set project $(DEMO_CLOUD_V2_PROJECT)
 GCP_SET_ACCOUNT_CMD = gcloud config set account $(KUSER)
-
+GO_FILES := ./cmd/api
 # =========================
 # GCP Authentication & Configuration
 # =========================

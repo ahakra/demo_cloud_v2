@@ -4,12 +4,12 @@ provider "google" {
 }
 
   resource "google_container_cluster" "gke_cluster_tf" {
-  name     = "gke-cluster-tf"
-
+  name     = "gke-cluster-tf-02"
   deletion_protection = false
   remove_default_node_pool = true
   initial_node_count = var.initial_node_count
 }
+
 resource "google_container_node_pool" "gke_node_pool" {
   name       = "additional-node-pool"
   cluster    = google_container_cluster.gke_cluster_tf.name
@@ -19,6 +19,7 @@ resource "google_container_node_pool" "gke_node_pool" {
   node_config {
     machine_type = var.machine_type
     disk_size_gb = var.disk_size_gb
+    disk_type    = "pd-standard"
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
