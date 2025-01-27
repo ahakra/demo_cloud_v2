@@ -47,13 +47,13 @@ jobs:
       - name: Upload Dependency-Check Report
         uses: actions/upload-artifact@v4
         with:
-          name: Dependency-Check Report
+          name: Download Dependency-Check
           path: ./reports/dependency-check-report.html
 
       - name: Download Dependency-Check Report
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: Dependency-Check Report  # The artifact name must match the first workflow's artifact name
+          name: Download Dependency-Check
           path: ./downloaded-reports
 
       # Step 2: Print all vulnerabilities from the HTML report
