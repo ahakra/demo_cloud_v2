@@ -1,0 +1,45 @@
+name: OWASP Security Check Pipeline
+
+on:
+  workflow_run:
+    workflows:
+      - Go Test Pipeline
+    types:
+      - completed
+    status: success
+
+
+jobs:
+  security-checks:
+    name: Security Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Go environment
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.23.2  # Replace with your Go version
+
+      # Step 3: Install Dependencies
+      - name: Install Dependencies
+        run: go mod tidy
+
+      # Step 4: Run OWASP Dependency-Check
+      - name: Run OWASP Dependency-Check
+        uses: dependency-check/actions/dependency-check-action@v4.4.0
+        with:
+          project: "go-security-check"
+          scan: "./"  # Path to your Go project
+          format: "ALL"  # Output all supported formats (HTML, JSON, XML, etc.)
+          out: "./owasp-report"  # Output folder for reports
+
+      # Step 5: Run GoSec for Static Code Analysis
+      - name: Run GoSec
+        run: |
+          go install github.com/securego/gosec/v2/cmd/gosec@latest
+          gosec -fmt=json -out=gosec-report.json ./...
