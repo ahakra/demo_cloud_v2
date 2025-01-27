@@ -48,4 +48,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Dependency-Check Report
-          path: reports
+          path: ./reports/dependency-check-report.html
