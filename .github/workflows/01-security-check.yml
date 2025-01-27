@@ -8,38 +8,44 @@ on:
       - completed
     status: success
 
-
 jobs:
-  security-checks:
-    name: Security Checks
+  depchecktest:
+    permissions:
+      contents: write
+      packages: write
     runs-on: ubuntu-latest
-
+    name: Dependency Check for Go Project
     steps:
-      # Step 1: Checkout the repository
-      - name: Checkout Code
+      # Step 1: Checkout the code
+      - name: Checkout
         uses: actions/checkout@v3
 
       # Step 2: Set up Go environment
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: 1.23.2  # Replace with your Go version
+          go-version: '1.23.2' # Replace with your Go version
 
-      # Step 3: Install Dependencies
-      - name: Install Dependencies
+      # Step 3: Install dependencies
+      - name: Install dependencies
         run: go mod tidy
 
-      # Step 4: Run OWASP Dependency-Check
+      # Step 4: Run Dependency-Check
       - name: Run OWASP Dependency-Check
-        uses: dependency-check/actions/dependency-check-action@v4.4.0
+        uses: dependency-check/Dependency-Check_Action@main
+        id: depcheck
         with:
-          project: "go-security-check"
-          scan: "./"  # Path to your Go project
-          format: "ALL"  # Output all supported formats (HTML, JSON, XML, etc.)
-          out: "./owasp-report"  # Output folder for reports
+          project: 'Go Dependency Check'
+          path: '.'
+          format: 'HTML'
+          out: 'reports' # Default output directory
+          args: >
+            --failOnCVSS 7
+            --enableRetired
 
-      # Step 5: Run GoSec for Static Code Analysis
-      - name: Run GoSec
-        run: |
-          go install github.com/securego/gosec/v2/cmd/gosec@latest
-          gosec -fmt=json -out=gosec-report.json ./...
+      # Step 5: Upload Dependency-Check Report
+      - name: Upload Dependency-Check Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: Dependency-Check Report
+          path: reports
