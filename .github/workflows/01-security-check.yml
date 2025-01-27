@@ -59,8 +59,7 @@ jobs:
       # Step 2: Print all vulnerabilities from the HTML report
       - name: Print all vulnerabilities from the report
         run: |
-          echo "All vulnerabilities found:"
-
+        
           # Check for different severity levels
           if grep -qi 'Critical' ./downloaded-reports/dependency-check-report.html; then
             echo "Critical vulnerabilities found!"
