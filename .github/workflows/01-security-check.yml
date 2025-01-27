@@ -60,12 +60,19 @@ jobs:
       - name: Print all vulnerabilities from the report
         run: |
           echo "All vulnerabilities found:"
-          cat ./downloaded-reports/dependency-check-report.html  # Print the entire HTML report
 
-          # Alternatively, you can look for specific critical vulnerabilities
+          # Check for different severity levels
           if grep -qi 'Critical' ./downloaded-reports/dependency-check-report.html; then
             echo "Critical vulnerabilities found!"
             exit 1  # Fail the workflow if critical issues are found
+          elif grep -qi 'High' ./downloaded-reports/dependency-check-report.html; then
+            echo "High vulnerabilities found!"
+          elif grep -qi 'Medium' ./downloaded-reports/dependency-check-report.html; then
+            echo "Medium vulnerabilities found!"
+          elif grep -qi 'Low' ./downloaded-reports/dependency-check-report.html; then
+            echo "Low vulnerabilities found!"
+          elif grep -qi 'Informational' ./downloaded-reports/dependency-check-report.html; then
+            echo "Informational findings found!"
           else
-            echo "No critical vulnerabilities found."
+            echo "No vulnerabilities found."
           fi
