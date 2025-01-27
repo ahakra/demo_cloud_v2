@@ -25,7 +25,7 @@ jobs:
         run: go mod tidy
 
       - name: Run Tests
-        run: go test .cmd/api/...
+        run: go test ./cmd/api/...
 
       - name: Print Test Coverage (Optional)
         run: go test -coverprofile=coverage.out ./... && go tool cover -func=coverage.out
