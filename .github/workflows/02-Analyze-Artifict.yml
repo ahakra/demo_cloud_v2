@@ -9,6 +9,9 @@ on:
 jobs:
   analyze-report:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     steps:
       # Step 1: Download the artifact from the first workflow
       - name: Download Dependency-Check Report

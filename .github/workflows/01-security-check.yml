@@ -45,7 +45,11 @@ jobs:
 
       # Step 5: Upload Dependency-Check Report
       - name: Upload Dependency-Check Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Dependency-Check Report
           path: ./reports/dependency-check-report.html
+
+      - name: Print Dependency-Check Report Content
+        run: |
+            cat ./reports/dependency-check-report.html  # Display the content in logs
