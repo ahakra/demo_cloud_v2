@@ -1,6 +1,5 @@
 name: Deploy IAC
 
-
 on:
   workflow_run:
     workflows:
@@ -10,7 +9,6 @@ on:
     status: success
 
 jobs:
-
   deploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
