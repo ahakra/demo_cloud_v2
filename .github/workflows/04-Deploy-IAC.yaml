@@ -1,0 +1,31 @@
+name: Deploy IAC
+
+
+on:
+  workflow_run:
+    workflows:
+      - Build and Deploy Docker Image
+    types:
+      - completed
+    status: success
+
+jobs:
+
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Allow GitHub to generate the OIDC token
+      contents: read   # Optional: For repository access
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Google Cloud authentication
+      - name: Authenticate to Google Cloud using Workload Identity Federation
+        uses: google-github-actions/auth@v2
+        with:
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+

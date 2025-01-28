@@ -3,6 +3,7 @@ IAC/Terraform/*.tfstate
 IAC/Terraform/*.tfstate.*
 IAC/Terraform/*.hcl
 IAC/Terraform/*.tfvars
+vault.txt
 
 bin/
 vault.txt
