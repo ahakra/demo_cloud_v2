@@ -75,14 +75,6 @@ jobs:
       - name: Push Docker image
         if: success()  # Push image only if the scan is successful
         run: |
-                # Tag the image with the GitHub SHA for the GitHub Container Registry
-                docker tag demo-cloud-v2:${{ github.sha }} ghcr.io/ahakra/demo_cloud_v2:${{ github.sha }}
-                
-                # Push the image to the GitHub Container Registry
-                docker push ghcr.io/ahakra/demo_cloud_v2:${{ github.sha }}
-
-      - name: Push Docker image again (Optional)
-        run: |
-                docker tag demo-cloud-v2:${{ github.sha }} ghcr.io/ahakra/demo_cloud_v2:${{ github.sha }}
-                docker push ghcr.io/ahakra/demo_cloud_v2:${{ github.sha }}
-
+              docker tag demo-cloud-v2:${{ github.sha }} ghcr.io/ahakra/demo_cloud_v2:${{ github.sha }}
+              docker push ghcr.io/ahakra/demo_cloud_v2:${{ github.sha }}
+    
