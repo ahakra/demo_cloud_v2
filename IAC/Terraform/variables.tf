@@ -9,7 +9,11 @@ variable "region" {
   default     = "europe-north1"
 }
 
-
+variable "zones" {
+  description = "List of zones where the node pool will be created"
+  type        = list(string)
+  default     = ["europe-north1-a"]
+}
 variable "node_pool_locations" {
   description = "List of zones where the node pool will be created"
   type        = list(string)

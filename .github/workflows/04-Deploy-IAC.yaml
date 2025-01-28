@@ -29,3 +29,20 @@ jobs:
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
 
+      - name: Update IAC
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Validate
+        working-directory: IAC/Terraform
+        run: terraform validate
+
+
+      - name: Terraform Plan
+        working-directory: IAC/Terraform
+        run: terraform plan -out=tfplan
+
+
+      - name: Terraform Apply
+        if: github.event_name == 'push' # Apply only on push events
+        working-directory: IAC/Terraform
+        run: terraform apply -auto-approve tfplan
