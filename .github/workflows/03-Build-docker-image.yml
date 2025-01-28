@@ -72,11 +72,6 @@ jobs:
                 write-comment: true
                 github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-            username: ${{ github.actor }}  # GitHub username
-            password: ${{ secrets.GITHUB_TOKEN }}  # Your GitHub Personal Access Token
 
             # Tag and Push Docker Image
       - name: Tag and Push Docker image
