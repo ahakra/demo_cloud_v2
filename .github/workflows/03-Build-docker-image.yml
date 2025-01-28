@@ -76,7 +76,7 @@ jobs:
         uses: docker/login-action@v2
         with:
             username: ${{ github.actor }}  # GitHub username
-            password: ${{ secrets.GHCR_TOKEN }}  # Your GitHub Personal Access Token
+            password: ${{ secrets.GITHUB_TOKEN }}  # Your GitHub Personal Access Token
 
             # Tag and Push Docker Image
       - name: Tag and Push Docker image
