@@ -66,7 +66,7 @@ jobs:
         id: docker-scout
         uses: docker/scout-action@v1
         with:
-                command: scan
+                command: cves
                 image: demo-cloud-v2:${{ github.sha }}  # Use the built image
                 only-severities: critical,high
                 write-comment: true
